@@ -48,14 +48,6 @@ DOCKER_BUILD_ARGS="--no-cache"
 echo "Building the base GPU image"
 ./build.gpu.sh
 
-echo "Building the gateway image ${GATEWAY_IMAGE}"
-cd "${BASE_DIR}/containers/gateway"
-./build.sh
-if ! $(docker tag -f datalab-gateway ${GATEWAY_IMAGE}); then
-  docker tag datalab-gateway ${GATEWAY_IMAGE}
-fi
-gcloud docker -- push ${GATEWAY_IMAGE}
-
 echo "Building the Datalab server"
 cd "${BASE_DIR}"
 ./sources/build.sh
@@ -63,22 +55,19 @@ cd "${BASE_DIR}"
 echo "Building the Datalab image ${DATALAB_IMAGE}"
 cd "${BASE_DIR}/containers/datalab"
 ./build.sh
-if ! $(docker tag -f datalab ${DATALAB_IMAGE}); then
+if ! $(docker tag datalab ${DATALAB_IMAGE}); then
   docker tag datalab ${DATALAB_IMAGE}
 fi
-gcloud docker -- push ${DATALAB_IMAGE}
+docker -- push ${DATALAB_IMAGE}
 
 echo "Building the Datalab GPU image ${DATALAB_GPU_IMAGE}"
 cd "${BASE_DIR}/containers/datalab"
 ./build.gpu.sh
-if ! $(docker tag -f datalab-gpu ${DATALAB_GPU_IMAGE}); then
+if ! $(docker tag datalab-gpu ${DATALAB_GPU_IMAGE}); then
   docker tag datalab-gpu ${DATALAB_GPU_IMAGE}
 fi
-docker tag -f datalab-gpu ${DATALAB_GPU_IMAGE}
-gcloud docker -- push ${DATALAB_GPU_IMAGE}
+docker tag datalab-gpu ${DATALAB_GPU_IMAGE}
+docker -- push ${DATALAB_GPU_IMAGE}
 
-cd "${BASE_DIR}"
-tar -cvzf "/tmp/${CLI_TARBALL}" --transform 's,^tools/cli,datalab,' tools/cli
-gsutil cp "/tmp/${CLI_TARBALL}" "gs://${PROJECT_ID}/${CLI_TARBALL}"
 
 popd >> /dev/null

@@ -46,7 +46,6 @@ if [ -n "${GATEWAY_VM}" ] || [ -n "${EXPERIMENTAL_KERNEL_GATEWAY_URL}" ] || [ -n
   exit "${ERR_UNSUPPORTED_GATEWAY_OPTION}"
 fi
 
-PYTHON2_ENV='py2env'
 PYTHON3_ENV='py3env'
 
 check_tmp_directory() {
@@ -64,11 +63,6 @@ check_tmp_directory() {
 function reinstall_pydatalab() {
   PYDATALAB=/content/pydatalab
   echo "Reinstalling pydatalab from ${PYDATALAB}"
-  source deactivate
-  source activate ${PYTHON2_ENV}
-  pip install --upgrade --no-deps --force-reinstall --no-cache-dir ${PYDATALAB}
-  pip install --upgrade --no-deps --force-reinstall ${PYDATALAB}/solutionbox/image_classification/.
-  pip install --upgrade --no-deps --force-reinstall ${PYDATALAB}/solutionbox/structured_data/.
   source deactivate
   source activate ${PYTHON3_ENV}
   pip install --upgrade --no-deps --force-reinstall --no-cache-dir ${PYDATALAB}
@@ -92,27 +86,6 @@ fi
 
 # Verify that we can write to the /tmp directory
 check_tmp_directory
-
-# Make sure the notebooks directory exists
-mkdir -p /content/datalab/notebooks
-
-# Fetch docs and tutorials. This should not abort startup if it fails
-{
-if [ -d /content/datalab/docs ]; then
-  # The docs directory already exists, so we have to either update or initialize it as a git repository
-  pushd ./
-  cd /content/datalab/docs
-  if [ -d /content/datalab/docs/.git ]; then
-    git fetch origin master; git reset --hard origin/master
-  else
-    git init; git remote add origin https://github.com/googledatalab/notebooks.git; git fetch origin;
-  fi
-  popd
-else
-  (cd /content/datalab; git clone -n --single-branch https://github.com/googledatalab/notebooks.git docs)
-fi
-(cd /content/datalab/docs; git config core.sparsecheckout true; echo $'intro/\nsamples/\ntutorials/\n*.ipynb\n' > .git/info/sparse-checkout; git checkout master)
-} || echo "Fetching tutorials and samples failed."
 
 # Run the user's custom extension script if it exists. To avoid platform issues with
 # execution permissions, line endings, etc, we create a local sanitized copy.

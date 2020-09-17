@@ -21,8 +21,8 @@
 #   license.sh third_party_licenses.csv /usr/licenses
 
 
-# switch to py2 conda virtual env.
-source activate py2env
+# switch to py3 conda virtual env.
+source activate py3env
 
 # Get the list of python packages installed locally.
 IFS=$'\n'
