@@ -87,6 +87,8 @@ fi
 # Verify that we can write to the /tmp directory
 check_tmp_directory
 
+mkdir -p /content/datalab
+
 # Run the user's custom extension script if it exists. To avoid platform issues with
 # execution permissions, line endings, etc, we create a local sanitized copy.
 if [ -f /content/datalab/.config/startup.sh ]
