@@ -93,7 +93,7 @@ RUN echo "deb-src http://ftp.us.debian.org/debian stretch main" >> /etc/apt/sour
         numpy==1.18.1 \
         oauth2client==4.1.3 \
         pandas-gbq==0.13.1 \
-        pandas==1.0.3 \
+        pandas==1.1.2 \
         pandocfilters==1.4.2 \
         parso==0.7.0 \
         pillow==7.0.0 \
