@@ -1,0 +1,9 @@
+{
+ "display_name": "Python 3.8",
+ "language": "python",
+ "argv": [
+  "/usr/local/envs/py3env/share/jupyter/kernels/python3.8/kernel-startup.sh",
+  "-f",
+  "{connection_file}"
+ ]
+}

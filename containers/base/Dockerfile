@@ -27,6 +27,7 @@ ENV DATALAB_CONDA_DIR /usr/local
 ENV PATH $PATH:/tools/node/bin:/tools/google-cloud-sdk/bin:$DATALAB_CONDA_DIR/bin
 
 ENV PYTHON_3_ENV py3env
+ENV PYTHON_38_ENV py38env
 
 # Needed to run "source" for switching Conda environments.
 SHELL ["/bin/bash", "-c"]
@@ -74,16 +75,62 @@ RUN echo "deb-src http://ftp.us.debian.org/debian stretch main" >> /etc/apt/sour
 # avoid subtle dependency issues.
     unset OLDPWD && \
 # Set up Python 3.5 Conda env and install packages.
-    conda create --yes --quiet --name $PYTHON_3_ENV python=3.8 \
+    conda create --yes --quiet --name $PYTHON_3_ENV python=3.5 \
+        crcmod==1.7 \
+        dask==0.17.1 \
+        dill==0.2.6 \
+        google-api-python-client==1.6.2 \
+        httplib2==0.10.3 \
+        h5py==2.7.1 \
+        ipykernel==4.8.2 \
+        ipywidgets==7.2.1 \
+        jinja2==2.8 \
+        jsonschema==2.6.0 \
+        matplotlib==2.1.2 \
+        mock==2.0.0 \
+        nltk==3.2.1 \
+        notebook==5.6.0 \
+        numpy==1.14.0 \
+        oauth2client==2.2.0 \
+        pandas-gbq==0.3.0 \
+        pandas==0.22.0 \
+        pandocfilters==1.4.2 \
+        parso==0.7.0 \
+        pillow==5.0.0 \
+        pip==18.0 \
+        plotly==1.12.5 \
+        psutil==4.3.0 \
+        pygments==2.1.3 \
+        python-dateutil==2.8.1 \
+        python-snappy==0.5.1 \
+        pytz==2018.4 \
+        pyzmq==17.1.0 \
+        requests==2.18.4 \
+        scikit-image==0.13.0 \
+        scikit-learn==0.19.1 \
+        scipy==1.0.0 \
+        seaborn==0.9.0 \
+        six==1.10.0 \
+        statsmodels==0.8.0 \
+        sympy==1.1.1 \
+        tornado==4.5.1 \
+        widgetsnbextension==3.2.1 && \
+# Make pip3 a copy of pip for the Python 3 environment.
+    cp /usr/local/envs/py3env/bin/pip /usr/local/envs/py3env/bin/pip3 && \
+    source deactivate && \
+# Clean up Python packages
+    conda clean -tipsy && \
+# Set up Python 3.8 Conda env and install packages.
+    conda create --yes --quiet --name $PYTHON_38_ENV python=3.8 \
         crcmod==1.7 \
         dask==2.25.0 \
         dill==0.3.2 \
         google-api-python-client==1.6.7 \
         httplib2==0.17.0\
         h5py==2.10.0 \
-        ipykernel==5.1.4 \
+        ipykernel==5.3.4 \
         ipywidgets==7.5.1 \
-        jinja2==2.11.1 \
+        jinja2==2.11.0 \
         jsonschema==3.2.0 \
         lightgbm==3.0.0 \
         matplotlib==3.2.1 \
@@ -100,7 +147,7 @@ RUN echo "deb-src http://ftp.us.debian.org/debian stretch main" >> /etc/apt/sour
         pip==20.2.3 \
         plotly==4.5.4 \
         psutil==5.7.0 \
-        pygments==2.6.1 \
+        pygments==2.4.2 \
         python-dateutil==2.8.1 \
         python-snappy==0.5.4 \
         pytz==2020.1 \
@@ -117,7 +164,7 @@ RUN echo "deb-src http://ftp.us.debian.org/debian stretch main" >> /etc/apt/sour
         widgetsnbextension==3.5.1 \
         xgboost==1.2.0 && \
 # Make pip3 a copy of pip for the Python 3 environment.
-    cp /usr/local/envs/py3env/bin/pip /usr/local/envs/py3env/bin/pip3 && \
+    cp /usr/local/envs/py38env/bin/pip /usr/local/envs/py38env/bin/pip3 && \
     source deactivate && \
 # Clean up Python packages
     conda clean -tipsy && \
@@ -169,7 +216,17 @@ RUN echo "deb-src http://ftp.us.debian.org/debian stretch main" >> /etc/apt/sour
 # For some reasons, merging it with the commands above does not work so creating a separate one.
 RUN source activate $PYTHON_3_ENV && \
     pip install --quiet -U --upgrade-strategy only-if-needed --no-cache-dir \
-        apache-airflow==1.10.11 \
+        apache-airflow==1.9.0 \
+        bs4==0.0.1 \
+        ggplot==0.6.8 \
+        google-cloud-monitoring==0.28.0 \
+        lime==0.1.1.23 \
+        protobuf==3.6.1 \
+        tensorflow==1.8.0
+
+RUN source activate $PYTHON_38_ENV && \
+    pip install --quiet -U --upgrade-strategy only-if-needed --no-cache-dir \
+        apache-airflow==1.10.12 \
         bs4==0.0.1 \
         ggplot==0.6.8 \
         google-cloud-monitoring==0.28.0 \
@@ -216,10 +273,13 @@ RUN if [ -d /datalab/lib/pydatalab/.git ]; then \
 # Set up correct paths for nbconvert
     mkdir -p /datalab/nbconvert && \
     cp -R /usr/local/share/jupyter/nbextensions/gcpdatalab/* /datalab/nbconvert && \
-    ln -s $DATALAB_CONDA_DIR/envs/$PYTHON_3_ENV/lib/python3.8/site-packages/notebook/static/custom/custom.css /datalab/nbconvert/custom.css
+    ln -s $DATALAB_CONDA_DIR/envs/$PYTHON_3_ENV/lib/python3.5/site-packages/notebook/static/custom/custom.css /datalab/nbconvert/custom.css
 
 
 COPY config/py3-kernel.json $DATALAB_CONDA_DIR/envs/$PYTHON_3_ENV/share/jupyter/kernels/python3/kernel.json
 COPY config/py3-kernel-startup.sh $DATALAB_CONDA_DIR/envs/$PYTHON_3_ENV/share/jupyter/kernels/python3/kernel-startup.sh
+COPY config/py38-kernel.json $DATALAB_CONDA_DIR/envs/$PYTHON_3_ENV/share/jupyter/kernels/python3.8/kernel.json
+COPY config/py38-kernel-startup.sh $DATALAB_CONDA_DIR/envs/$PYTHON_3_ENV/share/jupyter/kernels/python3.8/kernel-startup.sh
 
-RUN chmod 755 $DATALAB_CONDA_DIR/envs/$PYTHON_3_ENV/share/jupyter/kernels/python3/kernel-startup.sh
+RUN chmod 755 $DATALAB_CONDA_DIR/envs/$PYTHON_3_ENV/share/jupyter/kernels/python3/kernel-startup.sh && \
+    chmod 755 $DATALAB_CONDA_DIR/envs/$PYTHON_3_ENV/share/jupyter/kernels/python3.8/kernel-startup.sh
