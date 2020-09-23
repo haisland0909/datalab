@@ -77,7 +77,6 @@ RUN echo "deb-src http://ftp.us.debian.org/debian stretch main" >> /etc/apt/sour
 # Set up Python 3.5 Conda env and install packages.
     conda create --yes --quiet --name $PYTHON_3_ENV python=3.5 \
         crcmod==1.7 \
-        dask==0.17.1 \
         dill==0.2.6 \
         google-api-python-client==1.6.2 \
         httplib2==0.10.3 \
@@ -88,7 +87,6 @@ RUN echo "deb-src http://ftp.us.debian.org/debian stretch main" >> /etc/apt/sour
         jsonschema==2.6.0 \
         matplotlib==2.1.2 \
         mock==2.0.0 \
-        nltk==3.2.1 \
         notebook==5.6.0 \
         numpy==1.14.0 \
         oauth2client==2.2.0 \
@@ -111,7 +109,6 @@ RUN echo "deb-src http://ftp.us.debian.org/debian stretch main" >> /etc/apt/sour
         scipy==1.0.0 \
         seaborn==0.9.0 \
         six==1.10.0 \
-        statsmodels==0.8.0 \
         sympy==1.1.1 \
         tornado==4.5.1 \
         widgetsnbextension==3.2.1 && \

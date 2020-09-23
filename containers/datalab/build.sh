@@ -35,7 +35,8 @@ cd "${HERE}/"
 # Clean the build directory before building the image, so that the
 # prepare.sh script rebuilds web sources
 BUILD_DIR=../../build
-rm -rf $BUILD_DIR
+# do not build twice
+# rm -rf $BUILD_DIR
 ${HERE}/prepare.sh "datalab-base"
 
 # Build the docker image

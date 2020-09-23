@@ -32,10 +32,8 @@
 PROJECT_ID="${PROJECT_ID:-cloud-datalab}"
 TIMESTAMP=$(date +%Y%m%d)
 LABEL="${LABEL_PREFIX:-}${TIMESTAMP}"
-GATEWAY_IMAGE="gcr.io/${PROJECT_ID}/datalab-gateway:${LABEL}"
 DATALAB_IMAGE="gcr.io/${PROJECT_ID}/datalab:local-${LABEL}"
 DATALAB_GPU_IMAGE="gcr.io/${PROJECT_ID}/datalab-gpu:local-${LABEL}"
-CLI_TARBALL="datalab-cli-${LABEL}.tgz"
 
 pushd $(pwd) >> /dev/null
 BASE_DIR="$(cd $(dirname "${BASH_SOURCE[0]}")/../../ && pwd)"
