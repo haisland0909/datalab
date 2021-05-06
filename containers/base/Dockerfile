@@ -33,7 +33,8 @@ ENV PYTHON_38_ENV py38env
 SHELL ["/bin/bash", "-c"]
 
 # Setup OS and core packages
-RUN echo "deb-src http://ftp.us.debian.org/debian stretch main" >> /etc/apt/sources.list && \
+RUN apt-get update -y && apt-get install -y gnupg2 && \
+		echo "deb-src http://ftp.us.debian.org/debian stretch main" >> /etc/apt/sources.list && \
     apt-key adv --keyserver keyserver.ubuntu.com --recv-keys EF0F382A1A7B6500 04EE7237B7D453EC && \
     apt-get update -y && \
     apt-get install -y -q debian-archive-keyring debian-keyring && \
@@ -48,7 +49,8 @@ RUN echo "deb-src http://ftp.us.debian.org/debian stretch main" >> /etc/apt/sour
         pkg-config \
         unzip \
         wget \
-        zip && \
+        zip \
+        gnupg && \
     mkdir -p /tools && \
 # Save GPL source packages
     mkdir -p /srcs && \
@@ -79,6 +81,7 @@ RUN echo "deb-src http://ftp.us.debian.org/debian stretch main" >> /etc/apt/sour
         crcmod==1.7 \
         dill==0.2.6 \
         google-api-python-client==1.6.2 \
+        google-auth==1.23.0 \
         httplib2==0.10.3 \
         h5py==2.7.1 \
         ipykernel==4.8.2 \

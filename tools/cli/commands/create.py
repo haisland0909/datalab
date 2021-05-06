@@ -1074,7 +1074,7 @@ def run(args, gcloud_compute, gcloud_repos,
                     datalab_version_file.name))
             cmd.extend([
                 '--format=none',
-                '--boot-disk-size=20GB',
+                '--boot-disk-size=50GB',
                 '--network', args.network_name,
                 '--image-family', 'cos-stable',
                 '--image-project', 'cos-cloud',
